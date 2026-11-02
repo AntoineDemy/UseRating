@@ -26,13 +26,15 @@
         ['Series', 'Recently rated shows'],
         ['Episode', 'Recently rated episodes']
     ];
+    // Comparators use the precomputed `title` / `time` keys set in attachItemDetails.
+    const collator = new Intl.Collator();
     const SORTS = {
         'rating-desc': ['Rating: high to low', (a, b) => b.AverageRating - a.AverageRating],
         'rating-asc': ['Rating: low to high', (a, b) => a.AverageRating - b.AverageRating],
-        'title-asc': ['Title: A-Z', (a, b) => cardTitle(a.details).localeCompare(cardTitle(b.details))],
-        'title-desc': ['Title: Z-A', (a, b) => cardTitle(b.details).localeCompare(cardTitle(a.details))],
-        'recent': ['Recently rated', (a, b) => new Date(b.LastRated) - new Date(a.LastRated)],
-        'oldest': ['Oldest rated', (a, b) => new Date(a.LastRated) - new Date(b.LastRated)],
+        'title-asc': ['Title: A-Z', (a, b) => collator.compare(a.title, b.title)],
+        'title-desc': ['Title: Z-A', (a, b) => collator.compare(b.title, a.title)],
+        'recent': ['Recently rated', (a, b) => b.time - a.time],
+        'oldest': ['Oldest rated', (a, b) => a.time - b.time],
         'count-desc': ['Most ratings', (a, b) => b.TotalRatings - a.TotalRatings],
         'count-asc': ['Fewest ratings', (a, b) => a.TotalRatings - b.TotalRatings]
     };
@@ -566,15 +568,20 @@
      */
     async function attachItemDetails(summaries) {
         const userId = ApiClient.getCurrentUserId();
-        const details = new Map();
-
+        const batches = [];
         for (let i = 0; i < summaries.length; i += 100) {
-            const ids = summaries.slice(i, i + 100).map((s) => s.ItemId);
-            const result = await ApiClient.getItems(userId, {
-                Ids: ids.join(','),
+            // Only what the cards need: no user data, no total count.
+            batches.push(ApiClient.getItems(userId, {
+                Ids: summaries.slice(i, i + 100).map((s) => s.ItemId).join(','),
                 EnableImageTypes: 'Primary',
-                ImageTypeLimit: 1
-            });
+                ImageTypeLimit: 1,
+                EnableUserData: false,
+                EnableTotalRecordCount: false
+            }));
+        }
+
+        const details = new Map();
+        for (const result of await Promise.all(batches)) {
             for (const item of result.Items || []) {
                 details.set(normalizeId(item.Id), item);
             }
@@ -582,7 +589,10 @@
 
         return summaries
             .filter((s) => details.has(normalizeId(s.ItemId)))
-            .map((s) => ({ ...s, details: details.get(normalizeId(s.ItemId)) }));
+            .map((s) => {
+                const d = details.get(normalizeId(s.ItemId));
+                return { ...s, details: d, title: cardTitle(d), time: Date.parse(s.LastRated) };
+            });
     }
 
     function buildBrowserHeader(items) {
@@ -715,7 +725,7 @@
         return items.map((item) => {
             const d = item.details;
             const href = `#/details?id=${encodeURIComponent(d.Id)}&serverId=${encodeURIComponent(serverId)}`;
-            const title = cardTitle(d);
+            const title = item.title;
             const image = imageUrl(d);
             // Fallback letter sits under the image; shows if there is no image or it fails to load.
             const poster = `<span class="ur-poster-fallback">${escapeHtml(title.trim()[0] || '?')}</span>`

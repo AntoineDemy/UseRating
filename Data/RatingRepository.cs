@@ -14,12 +14,13 @@ namespace Jellyfin.Plugin.UserRatings.Data
     /// </summary>
     public class RatingRepository
     {
-        private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
-
         private readonly string _dataPath;
         private readonly ILogger<RatingRepository> _logger;
         private readonly object _lock = new();
         private readonly Dictionary<string, UserRating> _ratings;
+
+        // Secondary index so item lookups don't scan every rating on the server.
+        private readonly Dictionary<Guid, List<UserRating>> _byItem = new();
 
         public RatingRepository(IApplicationPaths appPaths, ILogger<RatingRepository> logger)
         {
@@ -27,6 +28,10 @@ namespace Jellyfin.Plugin.UserRatings.Data
             _dataPath = Path.Combine(appPaths.PluginConfigurationsPath, "UserRatings", "ratings.json");
             Directory.CreateDirectory(Path.GetDirectoryName(_dataPath)!);
             _ratings = Load();
+            foreach (var rating in _ratings.Values)
+            {
+                IndexAdd(rating);
+            }
         }
 
         public UserRating? GetRating(Guid itemId, Guid userId)
@@ -41,10 +46,9 @@ namespace Jellyfin.Plugin.UserRatings.Data
         {
             lock (_lock)
             {
-                return _ratings.Values
-                    .Where(r => r.ItemId == itemId)
-                    .OrderByDescending(r => r.Timestamp)
-                    .ToList();
+                return _byItem.TryGetValue(itemId, out var list)
+                    ? list.OrderByDescending(r => r.Timestamp).ToList()
+                    : new List<UserRating>();
             }
         }
 
@@ -63,14 +67,13 @@ namespace Jellyfin.Plugin.UserRatings.Data
         {
             lock (_lock)
             {
-                return _ratings.Values
-                    .GroupBy(r => r.ItemId)
-                    .Select(g => new RatedItemSummary
+                return _byItem
+                    .Select(e => new RatedItemSummary
                     {
-                        ItemId = g.Key,
-                        AverageRating = g.Average(r => r.Rating),
-                        TotalRatings = g.Count(),
-                        LastRated = g.Max(r => r.Timestamp)
+                        ItemId = e.Key,
+                        AverageRating = e.Value.Average(r => r.Rating),
+                        TotalRatings = e.Value.Count,
+                        LastRated = e.Value.Max(r => r.Timestamp)
                     })
                     .OrderByDescending(s => s.LastRated)
                     .ToList();
@@ -81,7 +84,14 @@ namespace Jellyfin.Plugin.UserRatings.Data
         {
             lock (_lock)
             {
-                _ratings[GetKey(rating.ItemId, rating.UserId)] = rating;
+                var key = GetKey(rating.ItemId, rating.UserId);
+                if (_ratings.Remove(key, out var previous))
+                {
+                    IndexRemove(previous);
+                }
+
+                _ratings[key] = rating;
+                IndexAdd(rating);
                 Persist();
             }
         }
@@ -90,11 +100,12 @@ namespace Jellyfin.Plugin.UserRatings.Data
         {
             lock (_lock)
             {
-                if (!_ratings.Remove(GetKey(itemId, userId)))
+                if (!_ratings.Remove(GetKey(itemId, userId), out var removed))
                 {
                     return false;
                 }
 
+                IndexRemove(removed);
                 Persist();
                 return true;
             }
@@ -105,11 +116,32 @@ namespace Jellyfin.Plugin.UserRatings.Data
             lock (_lock)
             {
                 _ratings.Clear();
+                _byItem.Clear();
                 Persist();
             }
         }
 
         private static string GetKey(Guid itemId, Guid userId) => $"{itemId}_{userId}";
+
+        // Caller must hold _lock (or be the constructor).
+        private void IndexAdd(UserRating rating)
+        {
+            if (!_byItem.TryGetValue(rating.ItemId, out var list))
+            {
+                _byItem[rating.ItemId] = list = new List<UserRating>();
+            }
+
+            list.Add(rating);
+        }
+
+        // Caller must hold _lock.
+        private void IndexRemove(UserRating rating)
+        {
+            if (_byItem.TryGetValue(rating.ItemId, out var list) && list.Remove(rating) && list.Count == 0)
+            {
+                _byItem.Remove(rating.ItemId);
+            }
+        }
 
         private Dictionary<string, UserRating> Load()
         {
@@ -137,8 +169,13 @@ namespace Jellyfin.Plugin.UserRatings.Data
         private void Persist()
         {
             // Write to a temp file then swap, so a crash mid-write never truncates the data.
+            // Compact JSON, streamed straight to disk: no intermediate string.
             var tempPath = _dataPath + ".tmp";
-            File.WriteAllText(tempPath, JsonSerializer.Serialize(_ratings, _jsonOptions));
+            using (var stream = File.Create(tempPath))
+            {
+                JsonSerializer.Serialize(stream, _ratings);
+            }
+
             File.Move(tempPath, _dataPath, overwrite: true);
         }
     }

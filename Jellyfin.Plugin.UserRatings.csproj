@@ -17,6 +17,7 @@
     <Authors>Antoine Demy</Authors>
     <Copyright>Copyright (c) 2026 Antoine Demy</Copyright>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +29,9 @@
     <None Remove="Configuration\configPage.html" />
     <None Remove="Configuration\ratings.js" />
     <EmbeddedResource Include="Configuration\configPage.html" />
-    <EmbeddedResource Include="Configuration\ratings.js" />
+    <!-- build.sh writes a minified copy to out/min; plain dotnet builds embed the readable source. -->
+    <EmbeddedResource Include="Configuration\ratings.js" Condition="!Exists('out\min\ratings.js')" />
+    <EmbeddedResource Include="out\min\ratings.js" LogicalName="Jellyfin.Plugin.UserRatings.Configuration.ratings.js" Condition="Exists('out\min\ratings.js')" />
   </ItemGroup>
 
 </Project>

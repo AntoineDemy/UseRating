@@ -116,6 +116,8 @@ Jellyfin's plugin API changes between release lines, so the plugin is built once
 ./build.sh 10.11.0    # a single one
 ```
 
+`build.sh` first minifies `ratings.js` (and its embedded CSS) with esbuild via `scripts/minify.mjs`; a plain `dotnet build` embeds the readable source instead.
+
 Each build produces `releases/user-ratings_<version>_jellyfin-<jellyfin>.zip` and prints its MD5 checksum. Add one entry per zip to `manifest.json` (newest `targetAbi` first).
 
 ```
@@ -123,6 +125,7 @@ Api/RatingsController.cs      REST endpoints
 Data/RatingRepository.cs      JSON-backed storage (singleton)
 Configuration/ratings.js      web UI: detail panel + home tab
 Configuration/configPage.html dashboard settings page
+scripts/minify.mjs            release minifier for ratings.js
 assets/                       banner, feature art, icon sources (SVG)
 ```
 
