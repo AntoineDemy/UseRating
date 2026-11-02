@@ -7,6 +7,15 @@
     "owner": "Antoine Demy",
     "category": "General",
     "imageUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/icon.png",
-    "versions": []
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release.",
+        "targetAbi": "10.9.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.0.0.0.zip",
+        "checksum": "44c157263a61abb9a932cb0b169cebfe",
+        "timestamp": "2026-11-02T16:13:47Z"
+      }
+    ]
   }
 ]
