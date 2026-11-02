@@ -13,6 +13,12 @@
 
 A social rating system for Jellyfin. Users rate movies, shows and episodes from 1 to 5 stars and can add a note. Everyone on the server can then see those ratings on each item's page, and a **User Ratings** tab on the home screen lists everything that has been rated.
 
+**Quick install:** add this repository in **Dashboard → Plugins → Repositories** (copy button on the right):
+
+```text
+https://raw.githubusercontent.com/AntoineDemy/UseRating/main/manifest.json
+```
+
 > **Note:** works in the **web UI** only (desktop and mobile browsers). Native apps (Android TV, Swiftfin, …) don't load plugin scripts.
 
 <p align="center">
@@ -46,11 +52,14 @@ A social rating system for Jellyfin. Users rate movies, shows and episodes from 
 
 ### From the plugin repository
 
+Repository URL (click the copy icon on the right of the box):
+
+```text
+https://raw.githubusercontent.com/AntoineDemy/UseRating/main/manifest.json
+```
+
 1. **Dashboard → Plugins → Repositories → +**
-2. Add this URL:
-   ```
-   https://raw.githubusercontent.com/AntoineDemy/UseRating/main/manifest.json
-   ```
+2. Paste the URL above
 3. **Catalog** → **User Ratings** → **Install**
 4. Restart Jellyfin
 
