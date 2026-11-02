@@ -17,6 +17,7 @@
     window.__userRatingsLoaded = true;
 
     const MAX_NOTE_LENGTH = 2000; // Keep in sync with RatingsController.MaxNoteLength
+    const COMPACT_VIEWERS = 8; // "Not watched" chips shown before the "+N more" button
     const PAGE_SIZE = 24;
     const TAB_CONTENT_ID = 'userRatingsTab';
     const STAR_LABELS = ['', 'Awful', 'Meh', 'Good', 'Great', 'Masterpiece'];
@@ -412,9 +413,21 @@
             }
             const group = el('div', 'ur-viewer-group');
             group.appendChild(el('div', 'ur-viewer-group-title', `${label} · ${list.length}`));
-            const chips = el('div', 'ur-viewer-list');
-            for (const viewer of list) {
-                chips.appendChild(buildViewer(viewer, normalizeId(viewer.UserId) === me, ratingByUser.get(normalizeId(viewer.UserId))));
+            const compact = list === groups[2][1];
+            const chips = el('div', compact ? 'ur-viewer-list ur-viewer-list-compact' : 'ur-viewer-list');
+            list.forEach((viewer, i) => {
+                const chip = buildViewer(viewer, normalizeId(viewer.UserId) === me, ratingByUser.get(normalizeId(viewer.UserId)));
+                chip.hidden = compact && i >= COMPACT_VIEWERS;
+                chips.appendChild(chip);
+            });
+            if (compact && list.length > COMPACT_VIEWERS) {
+                const more = el('button', 'ur-viewer-more', `+${list.length - COMPACT_VIEWERS} more`);
+                more.type = 'button';
+                more.addEventListener('click', () => {
+                    chips.querySelectorAll('.ur-viewer[hidden]').forEach((chip) => { chip.hidden = false; });
+                    more.remove();
+                });
+                chips.appendChild(more);
             }
             group.appendChild(chips);
             card.appendChild(group);
@@ -863,9 +876,9 @@
             .ur-root {
                 --ur-accent: #00a4dc;
                 --ur-gold: #ffc83d;
-                --ur-surface: rgba(255, 255, 255, 0.045);
-                --ur-surface-2: rgba(255, 255, 255, 0.09);
-                --ur-border: rgba(255, 255, 255, 0.09);
+                --ur-surface: rgba(18, 18, 24, 0.55);
+                --ur-surface-2: rgba(255, 255, 255, 0.08);
+                --ur-border: rgba(255, 255, 255, 0.1);
                 --ur-muted: rgba(255, 255, 255, 0.6);
                 --ur-radius: 12px;
             }
@@ -883,6 +896,8 @@
                 border-radius: var(--ur-radius);
                 padding: 1.25em 1.4em;
                 min-width: 0;
+                -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
             }
             .ur-card-title { font-weight: 600; font-size: 1.05em; margin-bottom: 0.7em; }
             .ur-meter {
@@ -909,9 +924,9 @@
             .ur-button-ghost:hover:not(:disabled) { background: var(--ur-surface-2); }
 
             /* Detail page panel */
-            .user-ratings-container { margin: 2.5em 0 1.5em; }
+            .user-ratings-container { display: block; width: 100%; max-width: 1400px; flex: 1 1 100%; grid-column: 1 / -1; align-self: stretch; margin: 2.5em 0 1.5em; }
             .ur-heading { font-size: 1.4em; font-weight: 600; margin: 0 0 0.8em; }
-            .ur-layout { display: grid; grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); gap: 1em; }
+            .ur-layout { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: 1em; align-items: stretch; }
             .ur-summary-head { display: flex; align-items: center; gap: 0.8em; margin-bottom: 1.1em; }
             .ur-score { font-size: 3em; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
             .ur-summary-meta { display: flex; flex-direction: column; gap: 0.4em; font-size: 0.95em; }
@@ -962,7 +977,7 @@
                 background: var(--ur-surface-2); border: 1px solid var(--ur-border);
             }
             .ur-viewer .ur-avatar { width: 2em; height: 2em; font-size: 0.9em; }
-            .ur-viewer-unwatched { background: transparent; }
+            .ur-viewer-unwatched { background: rgba(255, 255, 255, 0.03); }
             .ur-viewer-unwatched .ur-avatar { filter: grayscale(1); opacity: 0.45; }
             .ur-viewer-unwatched .ur-viewer-name { color: var(--ur-muted); font-weight: 500; }
             .ur-viewer-text { flex: 1; min-width: 0; }
@@ -978,12 +993,24 @@
                 -webkit-mask: radial-gradient(circle, transparent 45%, #000 46%); mask: radial-gradient(circle, transparent 45%, #000 46%);
             }
             .ur-viewer-unwatched .ur-viewer-mark { border: 1.5px dashed rgba(255, 255, 255, 0.25); }
+            .ur-viewer-list-compact { display: flex; flex-wrap: wrap; gap: 0.4em; }
+            .ur-viewer-list-compact .ur-viewer { padding: 0.25em 0.8em 0.25em 0.25em; gap: 0.45em; }
+            .ur-viewer-list-compact .ur-viewer .ur-avatar { width: 1.6em; height: 1.6em; font-size: 0.75em; }
+            .ur-viewer-list-compact .ur-viewer-name { font-size: 0.82em; }
+            .ur-viewer-list-compact .ur-viewer-sub { font-size: 0.7em; }
+            .ur-viewer-list-compact .ur-viewer-mark { display: none; }
+            .ur-viewer[hidden] { display: none; }
+            .ur-viewer-more {
+                font: inherit; font-size: 0.8em; font-weight: 600; color: var(--ur-accent); cursor: pointer;
+                padding: 0.35em 0.9em; border-radius: 999px; background: transparent; border: 1px dashed rgba(0, 164, 220, 0.5);
+            }
+            .ur-viewer-more:hover { background: rgba(0, 164, 220, 0.12); }
 
             .ur-reviews { margin-top: 1.8em; }
             .ur-subheading { display: flex; align-items: center; gap: 0.5em; font-size: 1.15em; font-weight: 600; margin: 0 0 0.8em; }
             .ur-pill { font-size: 0.75em; font-weight: 500; padding: 0.15em 0.65em; border-radius: 999px; background: var(--ur-surface-2); color: var(--ur-muted); }
             .ur-review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 0.8em; }
-            .ur-review { background: var(--ur-surface); border: 1px solid var(--ur-border); border-radius: var(--ur-radius); padding: 1em 1.1em; min-width: 0; }
+            .ur-review { background: var(--ur-surface); border: 1px solid var(--ur-border); border-radius: var(--ur-radius); padding: 1em 1.1em; min-width: 0; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
             .ur-review-mine { border-color: rgba(0, 164, 220, 0.5); background: rgba(0, 164, 220, 0.06); }
             .ur-review-head { display: flex; align-items: center; gap: 0.75em; }
             .ur-avatar {
