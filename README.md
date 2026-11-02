@@ -9,6 +9,8 @@
   <img src="https://img.shields.io/badge/client-web%20UI-00A4DC" alt="Web UI">
 </p>
 
+> **Origin:** this plugin is based on an earlier version of [Jellyfin.Plugin.UserRating](https://github.com/aG00Dtime/Jellyfin.Plugin.UserRating) by David Henry. It has since been reworked and is now maintained here as a separate project.
+
 A social rating system for Jellyfin. Users rate movies, shows and episodes from 1 to 5 stars and can add a note. Everyone on the server can then see those ratings on each item's page, and a **User Ratings** tab on the home screen lists everything that has been rated.
 
 > **Note:** works in the **web UI** only (desktop and mobile browsers). Native apps (Android TV, Swiftfin, …) don't load plugin scripts.
@@ -40,16 +42,6 @@ A social rating system for Jellyfin. Users rate movies, shows and episodes from 
 - ⚡ No polling and no page reloads: a single idempotent sync runs on navigation and DOM changes
 - 💾 Ratings are stored in a plain JSON file, so nothing is written to Jellyfin's database
 
-## Screenshots
-
-> These screenshots come from an earlier version. The current UI uses Jellyfin's accent colours and adds the score breakdown.
-
-| Rating panel | Ratings tab |
-|---|---|
-| <img src="screenshots/browser.png" alt="Rating panel" width="420"> | <img src="screenshots/view user ratings.png" alt="User Ratings tab" width="420"> |
-
-<p align="center"><img src="screenshots/mobile_app.png" alt="Mobile browser" width="260"></p>
-
 ## Installation
 
 ### From the plugin repository
@@ -57,7 +49,7 @@ A social rating system for Jellyfin. Users rate movies, shows and episodes from 
 1. **Dashboard → Plugins → Repositories → +**
 2. Add this URL:
    ```
-   https://raw.githubusercontent.com/aG00Dtime/Jellyfin.Plugin.UserRating/main/manifest.json
+   https://raw.githubusercontent.com/AntoineDemy/UseRating/main/manifest.json
    ```
 3. **Catalog** → **User Ratings** → **Install**
 4. Restart Jellyfin
