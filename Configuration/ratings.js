@@ -181,7 +181,7 @@
             data = await api('GET', `UserRatings/Items/${itemId}`);
         } catch (error) {
             console.error('[UserRatings] Could not load ratings', error);
-            container.replaceChildren(el('div', 'ur-muted', 'Could not load ratings.'));
+            container.replaceChildren(el('div', 'ur-muted', `Could not load ratings: ${error.message}`));
             return;
         }
 

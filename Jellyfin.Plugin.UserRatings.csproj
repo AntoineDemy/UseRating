@@ -1,9 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Build for a given Jellyfin release line: dotnet build -p:JellyfinVersion=10.11.0 -->
+  <PropertyGroup>
+    <JellyfinVersion Condition="'$(JellyfinVersion)' == ''">10.9.0</JellyfinVersion>
+    <JellyfinMajorMinor>$([System.Version]::Parse('$(JellyfinVersion)').ToString(2))</JellyfinMajorMinor>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <TargetFramework Condition="'$(JellyfinMajorMinor)' == '10.11'">net9.0</TargetFramework>
+    <TargetFramework Condition="$([System.Version]::Parse('$(JellyfinVersion)').Major) &gt;= 12">net10.0</TargetFramework>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Authors>Antoine Demy</Authors>
@@ -11,9 +19,17 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(JellyfinMajorMinor)' != '10.9' And '$(JellyfinMajorMinor)' != '10.10'">
+    <DefineConstants>$(DefineConstants);JELLYFIN_10_11_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([System.Version]::Parse('$(JellyfinVersion)').Major) &gt;= 12">
+    <DefineConstants>$(DefineConstants);JELLYFIN_12_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Jellyfin.Controller" Version="10.9.0" />
-    <PackageReference Include="Jellyfin.Model" Version="10.9.0" />
+    <PackageReference Include="Jellyfin.Controller" Version="$(JellyfinVersion)" />
+    <PackageReference Include="Jellyfin.Model" Version="$(JellyfinVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,4 +40,3 @@
   </ItemGroup>
 
 </Project>
-

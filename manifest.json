@@ -9,12 +9,36 @@
     "imageUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/icon.png",
     "versions": [
       {
-        "version": "1.0.0.0",
-        "changelog": "Initial release.",
+        "version": "1.1.0.0",
+        "changelog": "Fix 'Could not load ratings' on Jellyfin 10.11 and 12. Builds for each Jellyfin release line. Watch status errors no longer break ratings.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.0.0_jellyfin-12.0.0.zip",
+        "checksum": "b84cbfd7090848d777e44bee9ef031c4",
+        "timestamp": "2026-11-02T16:23:37Z"
+      },
+      {
+        "version": "1.1.0.0",
+        "changelog": "Fix 'Could not load ratings' on Jellyfin 10.11 and 12. Builds for each Jellyfin release line. Watch status errors no longer break ratings.",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.0.0_jellyfin-10.11.0.zip",
+        "checksum": "bce769e5ac952bec06370ad09576deca",
+        "timestamp": "2026-11-02T16:23:37Z"
+      },
+      {
+        "version": "1.1.0.0",
+        "changelog": "Fix 'Could not load ratings' on Jellyfin 10.11 and 12. Builds for each Jellyfin release line. Watch status errors no longer break ratings.",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.0.0_jellyfin-10.10.0.zip",
+        "checksum": "30195787f5294695026362181e7c7f3c",
+        "timestamp": "2026-11-02T16:23:37Z"
+      },
+      {
+        "version": "1.1.0.0",
+        "changelog": "Fix 'Could not load ratings' on Jellyfin 10.11 and 12. Builds for each Jellyfin release line. Watch status errors no longer break ratings.",
         "targetAbi": "10.9.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.0.0.0.zip",
-        "checksum": "44c157263a61abb9a932cb0b169cebfe",
-        "timestamp": "2026-11-02T16:13:47Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.0.0_jellyfin-10.9.0.zip",
+        "checksum": "a02739232e74178ce223c07d98eb3a53",
+        "timestamp": "2026-11-02T16:23:37Z"
       }
     ]
   }

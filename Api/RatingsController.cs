@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Security.Claims;
+#if JELLYFIN_10_11_OR_GREATER
+using Jellyfin.Data;
+using Jellyfin.Database.Implementations.Enums;
+#else
 using Jellyfin.Data.Enums;
+#endif
 using Jellyfin.Plugin.UserRatings.Data;
 using Jellyfin.Plugin.UserRatings.Models;
 using MediaBrowser.Controller.Entities;
@@ -12,6 +17,7 @@ using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.UserRatings.Api
 {
@@ -35,17 +41,20 @@ namespace Jellyfin.Plugin.UserRatings.Api
         private readonly IUserManager _userManager;
         private readonly ILibraryManager _libraryManager;
         private readonly IUserDataManager _userDataManager;
+        private readonly ILogger<RatingsController> _logger;
 
         public RatingsController(
             RatingRepository repository,
             IUserManager userManager,
             ILibraryManager libraryManager,
-            IUserDataManager userDataManager)
+            IUserDataManager userDataManager,
+            ILogger<RatingsController> logger)
         {
             _repository = repository;
             _userManager = userManager;
             _libraryManager = libraryManager;
             _userDataManager = userDataManager;
+            _logger = logger;
         }
 
         /// <summary>All ratings for an item, the current user's own rating and who has watched it.</summary>
@@ -62,7 +71,7 @@ namespace Jellyfin.Plugin.UserRatings.Api
                 TotalRatings = ratings.Count,
                 MyRating = ratings.FirstOrDefault(r => r.UserId == userId),
                 Ratings = ratings,
-                Viewers = GetViewers(itemId, userId)
+                Viewers = TryGetViewers(itemId, userId)
             };
         }
 
@@ -138,6 +147,20 @@ namespace Jellyfin.Plugin.UserRatings.Api
             return NoContent();
         }
 
+        /// <summary>Watch status is a nice-to-have: never let it break the ratings themselves.</summary>
+        private List<ViewerDto>? TryGetViewers(Guid itemId, Guid currentUserId)
+        {
+            try
+            {
+                return GetViewers(itemId, currentUserId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not load watch status for item {ItemId}", itemId);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Watch status of every enabled user who can access the item, based on Jellyfin's own played data.
         /// Null when the feature is turned off or the item isn't something you watch.
@@ -156,7 +179,12 @@ namespace Jellyfin.Plugin.UserRatings.Api
                 return null;
             }
 
-            return _userManager.Users
+#if JELLYFIN_12_OR_GREATER
+            var users = _userManager.GetUsers();
+#else
+            var users = _userManager.Users;
+#endif
+            return users
                 .Where(u => !u.HasPermission(PermissionKind.IsDisabled) && item.IsVisible(u))
                 .Select(u =>
                 {

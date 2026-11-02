@@ -111,14 +111,14 @@ Ratings are stored in `<config>/plugins/configurations/UserRatings/ratings.json`
 
 ## Building
 
-The plugin targets **.NET 8** and Jellyfin **10.9**. If the .NET 8 SDK isn't installed locally, build in Docker:
+Jellyfin's plugin API changes between release lines, so the plugin is built once per line (10.9, 10.10, 10.11, 12.x) against the matching `Jellyfin.Controller` package. The build runs in Docker:
 
 ```bash
-docker run --rm -v "$PWD":/src -w /src mcr.microsoft.com/dotnet/sdk:8.0 \
-  dotnet build -c Release -o /src/out
+./build.sh            # all release lines
+./build.sh 10.11.0    # a single one
 ```
 
-The output is `out/Jellyfin.Plugin.UserRatings.dll`.
+Each build produces `releases/user-ratings_<version>_jellyfin-<jellyfin>.zip` and prints its MD5 checksum. Add one entry per zip to `manifest.json` (newest `targetAbi` first).
 
 ```
 Api/RatingsController.cs      REST endpoints
