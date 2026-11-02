@@ -9,36 +9,36 @@
     "imageUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/icon.png",
     "versions": [
       {
-        "version": "1.1.1.0",
-        "changelog": "Redesigned ratings panel: full-width layout (fixes squashed rating form on recent Jellyfin), frosted cards readable over backdrops, compact collapsible 'Not watched' list.",
+        "version": "1.1.2.0",
+        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
         "targetAbi": "12.0.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.1.0_jellyfin-12.0.0.zip",
-        "checksum": "cd49bf2b2a1a1dd5d31f3f615fbe757c",
-        "timestamp": "2026-11-02T16:33:04Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-12.0.0.zip",
+        "checksum": "e19e0028d35587a7c5d65ccd8a0ca12b",
+        "timestamp": "2026-11-02T16:37:05Z"
       },
       {
-        "version": "1.1.1.0",
-        "changelog": "Redesigned ratings panel: full-width layout (fixes squashed rating form on recent Jellyfin), frosted cards readable over backdrops, compact collapsible 'Not watched' list.",
+        "version": "1.1.2.0",
+        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.1.0_jellyfin-10.11.0.zip",
-        "checksum": "24a794442670064381f3d568ed561020",
-        "timestamp": "2026-11-02T16:33:04Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-10.11.0.zip",
+        "checksum": "2b970bf1add72bd76a0636abd77fd714",
+        "timestamp": "2026-11-02T16:37:05Z"
       },
       {
-        "version": "1.1.1.0",
-        "changelog": "Redesigned ratings panel: full-width layout (fixes squashed rating form on recent Jellyfin), frosted cards readable over backdrops, compact collapsible 'Not watched' list.",
+        "version": "1.1.2.0",
+        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.1.0_jellyfin-10.10.0.zip",
-        "checksum": "dfbb56cdb2e321e084efdbac37a994ef",
-        "timestamp": "2026-11-02T16:33:04Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-10.10.0.zip",
+        "checksum": "fd362a2cfbf994307aaf435ef1a4bece",
+        "timestamp": "2026-11-02T16:37:05Z"
       },
       {
-        "version": "1.1.1.0",
-        "changelog": "Redesigned ratings panel: full-width layout (fixes squashed rating form on recent Jellyfin), frosted cards readable over backdrops, compact collapsible 'Not watched' list.",
+        "version": "1.1.2.0",
+        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
         "targetAbi": "10.9.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.1.0_jellyfin-10.9.0.zip",
-        "checksum": "f584c55cf2ba18f3a25cbc18c418f8b6",
-        "timestamp": "2026-11-02T16:33:04Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-10.9.0.zip",
+        "checksum": "1c9556e8774389b12b647269c3aaf726",
+        "timestamp": "2026-11-02T16:37:05Z"
       }
     ]
   }

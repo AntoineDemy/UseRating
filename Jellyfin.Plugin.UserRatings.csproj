@@ -10,8 +10,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <TargetFramework Condition="'$(JellyfinMajorMinor)' == '10.11'">net9.0</TargetFramework>
     <TargetFramework Condition="$([System.Version]::Parse('$(JellyfinVersion)').Major) &gt;= 12">net10.0</TargetFramework>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Authors>Antoine Demy</Authors>

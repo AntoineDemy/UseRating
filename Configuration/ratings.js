@@ -151,7 +151,10 @@
             return;
         }
 
-        const target = page.querySelector('.detailPagePrimaryContent .detailSection')
+        // Sit next to the detail section rather than inside it: on recent Jellyfin it's a flex row
+        // whose width is shared with the overview, which squashes the panel.
+        const section = page.querySelector('.detailPagePrimaryContent .detailSection');
+        const target = section?.parentElement
             || page.querySelector('.detailPagePrimaryContent')
             || page.querySelector('.detailPageContent');
         if (!target) {
@@ -168,7 +171,11 @@
 
         const container = el('section', 'user-ratings-container ur-root');
         container.dataset.itemId = itemId;
-        target.appendChild(container);
+        if (section) {
+            section.after(container);
+        } else {
+            target.appendChild(container);
+        }
         renderDetail(container, itemId);
     }
 
@@ -924,9 +931,12 @@
             .ur-button-ghost:hover:not(:disabled) { background: var(--ur-surface-2); }
 
             /* Detail page panel */
-            .user-ratings-container { display: block; width: 100%; max-width: 1400px; flex: 1 1 100%; grid-column: 1 / -1; align-self: stretch; margin: 2.5em 0 1.5em; }
+            .user-ratings-container { display: block; width: 100%; max-width: 1400px; flex: 1 1 100%; grid-column: 1 / -1; align-self: stretch; margin: 2.5em 0 1.5em; container-type: inline-size; }
             .ur-heading { font-size: 1.4em; font-weight: 600; margin: 0 0 0.8em; }
-            .ur-layout { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: 1em; align-items: stretch; }
+            .ur-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1em; align-items: stretch; }
+            @container (min-width: 720px) {
+                .ur-layout { grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); }
+            }
             .ur-summary-head { display: flex; align-items: center; gap: 0.8em; margin-bottom: 1.1em; }
             .ur-score { font-size: 3em; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
             .ur-summary-meta { display: flex; flex-direction: column; gap: 0.4em; font-size: 0.95em; }
@@ -1098,7 +1108,6 @@
 
             /* Responsive */
             @media (max-width: 760px) {
-                .ur-layout { grid-template-columns: minmax(0, 1fr); }
                 .ur-card { padding: 1em 1.1em; }
                 .ur-score { font-size: 2.6em; }
                 .ur-star { font-size: 2.4em; padding: 0.05em 0.1em; }
