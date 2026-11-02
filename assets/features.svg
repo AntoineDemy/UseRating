@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="jf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#AA5CC3"/>
+      <stop offset="1" stop-color="#00A4DC"/>
+    </linearGradient>
+    <linearGradient id="poster1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a5c"/><stop offset="1" stop-color="#1b2440"/></linearGradient>
+    <linearGradient id="poster2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d4a63"/><stop offset="1" stop-color="#14213a"/></linearGradient>
+    <linearGradient id="poster3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c2a3f"/><stop offset="1" stop-color="#22192e"/></linearGradient>
+    <path id="star" d="M0,-1 L0.2245,-0.309 L0.9511,-0.309 L0.3633,0.118 L0.5878,0.809 L0,0.382 L-0.5878,0.809 L-0.3633,0.118 L-0.9511,-0.309 L-0.2245,-0.309 Z"/>
+  </defs>
+  <rect width="1280" height="420" fill="#0b0f1a"/>
+
+  <!-- Panel 1: rate -->
+  <g transform="translate(40 40)">
+    <rect width="380" height="340" rx="16" fill="#151b28" stroke="#ffffff" stroke-opacity="0.08"/>
+    <text x="28" y="48" font-size="13" font-weight="700" letter-spacing="2" fill="#AA5CC3">01 · RATE</text>
+    <text x="28" y="80" font-size="24" font-weight="700" fill="#fff">On every detail page</text>
+    <g fill="#ffd700">
+      <use href="#star" transform="translate(48 140) scale(18)"/>
+      <use href="#star" transform="translate(94 140) scale(18)"/>
+      <use href="#star" transform="translate(140 140) scale(18)"/>
+      <use href="#star" transform="translate(186 140) scale(18)"/>
+    </g>
+    <use href="#star" fill="#fff" fill-opacity="0.15" transform="translate(232 140) scale(18)"/>
+    <text x="268" y="147" font-size="18" fill="#ffd700">Great</text>
+    <rect x="28" y="180" width="324" height="70" rx="10" fill="#000" fill-opacity="0.25" stroke="#00A4DC"/>
+    <text x="44" y="210" font-size="15" fill="#c7d0e0">Loved the score, pacing dips</text>
+    <text x="44" y="230" font-size="15" fill="#c7d0e0">a bit in the middle…</text>
+    <text x="352" y="270" text-anchor="end" font-size="12" fill="#7d879a">47 / 2000</text>
+    <rect x="28" y="284" width="140" height="36" rx="18" fill="#00A4DC"/>
+    <text x="98" y="308" text-anchor="middle" font-size="15" font-weight="600" fill="#fff">Post rating</text>
+    <text x="186" y="308" font-size="14" fill="#7d879a">1–5 stars + note</text>
+  </g>
+
+  <!-- Panel 2: see -->
+  <g transform="translate(450 40)">
+    <rect width="380" height="340" rx="16" fill="#151b28" stroke="#ffffff" stroke-opacity="0.08"/>
+    <text x="28" y="48" font-size="13" font-weight="700" letter-spacing="2" fill="#8a7fd4">02 · COMPARE</text>
+    <text x="28" y="80" font-size="24" font-weight="700" fill="#fff">See what others think</text>
+    <text x="28" y="152" font-size="56" font-weight="700" fill="#fff">4.3</text>
+    <text x="126" y="126" font-size="20" fill="#ffd700">★★★★<tspan fill="#fff" fill-opacity="0.2">★</tspan></text>
+    <text x="126" y="150" font-size="14" fill="#7d879a">6 ratings</text>
+    <g font-size="13" fill="#c7d0e0">
+      <text x="28" y="196">5 ★</text><rect x="64" y="186" width="250" height="8" rx="4" fill="#fff" fill-opacity="0.08"/><rect x="64" y="186" width="125" height="8" rx="4" fill="#ffd700"/><text x="352" y="196" text-anchor="end" fill="#7d879a">3</text>
+      <text x="28" y="222">4 ★</text><rect x="64" y="212" width="250" height="8" rx="4" fill="#fff" fill-opacity="0.08"/><rect x="64" y="212" width="83" height="8" rx="4" fill="#ffd700"/><text x="352" y="222" text-anchor="end" fill="#7d879a">2</text>
+      <text x="28" y="248">3 ★</text><rect x="64" y="238" width="250" height="8" rx="4" fill="#fff" fill-opacity="0.08"/><rect x="64" y="238" width="42" height="8" rx="4" fill="#ffd700"/><text x="352" y="248" text-anchor="end" fill="#7d879a">1</text>
+      <text x="28" y="274">2 ★</text><rect x="64" y="264" width="250" height="8" rx="4" fill="#fff" fill-opacity="0.08"/><text x="352" y="274" text-anchor="end" fill="#7d879a">0</text>
+      <text x="28" y="300">1 ★</text><rect x="64" y="290" width="250" height="8" rx="4" fill="#fff" fill-opacity="0.08"/><text x="352" y="300" text-anchor="end" fill="#7d879a">0</text>
+    </g>
+  </g>
+
+  <!-- Panel 3: discover -->
+  <g transform="translate(860 40)">
+    <rect width="380" height="340" rx="16" fill="#151b28" stroke="#ffffff" stroke-opacity="0.08"/>
+    <text x="28" y="48" font-size="13" font-weight="700" letter-spacing="2" fill="#00A4DC">03 · DISCOVER</text>
+    <text x="28" y="80" font-size="24" font-weight="700" fill="#fff">A home-screen tab</text>
+    <g font-size="13" font-weight="600">
+      <rect x="28" y="104" width="44" height="28" rx="14" fill="#00A4DC"/><text x="50" y="123" text-anchor="middle" fill="#fff">All</text>
+      <rect x="80" y="104" width="72" height="28" rx="14" fill="#fff" fill-opacity="0.08"/><text x="116" y="123" text-anchor="middle" fill="#c7d0e0">Movies</text>
+      <rect x="160" y="104" width="64" height="28" rx="14" fill="#fff" fill-opacity="0.08"/><text x="192" y="123" text-anchor="middle" fill="#c7d0e0">Shows</text>
+      <rect x="232" y="104" width="84" height="28" rx="14" fill="#fff" fill-opacity="0.08"/><text x="274" y="123" text-anchor="middle" fill="#c7d0e0">Episodes</text>
+    </g>
+    <g>
+      <rect x="28" y="148" width="100" height="140" rx="8" fill="url(#poster1)"/>
+      <rect x="140" y="148" width="100" height="140" rx="8" fill="url(#poster2)"/>
+      <rect x="252" y="148" width="100" height="140" rx="8" fill="url(#poster3)"/>
+      <g font-size="13" fill="#ffd700">
+        <rect x="36" y="156" width="52" height="22" rx="11" fill="#000" fill-opacity="0.6"/><text x="62" y="172" text-anchor="middle">★ 4.8</text>
+        <rect x="148" y="156" width="52" height="22" rx="11" fill="#000" fill-opacity="0.6"/><text x="174" y="172" text-anchor="middle">★ 4.5</text>
+        <rect x="260" y="156" width="52" height="22" rx="11" fill="#000" fill-opacity="0.6"/><text x="286" y="172" text-anchor="middle">★ 4.1</text>
+      </g>
+      <g fill="#fff" fill-opacity="0.12">
+        <use href="#star" transform="translate(78 230) scale(18)"/>
+        <use href="#star" transform="translate(190 230) scale(18)"/>
+        <use href="#star" transform="translate(302 230) scale(18)"/>
+      </g>
+    </g>
+    <text x="28" y="318" font-size="14" fill="#7d879a">8 sort modes · type filters · paging</text>
+  </g>
+</svg>
