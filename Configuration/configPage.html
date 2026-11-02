@@ -21,17 +21,6 @@
                         <div class="fieldDescription">Items shown in each "Recently rated" row (movies, shows, episodes). Default: 10.</div>
                     </div>
 
-                    <div class="checkboxContainer checkboxContainer-withDescription">
-                        <label>
-                            <input is="emby-checkbox" type="checkbox" id="showWatchStatus" />
-                            <span>Show who has watched each item</span>
-                        </label>
-                        <div class="fieldDescription checkboxFieldDescription">
-                            Item pages list every user with access to the item and whether they have watched it,
-                            using Jellyfin's played status. Visible to all users. Default: on.
-                        </div>
-                    </div>
-
                     <button is="emby-button" type="submit" class="raised button-submit block">
                         <span>Save</span>
                     </button>
@@ -55,7 +44,6 @@
                 var pluginId = 'b8c5d3e7-4f6a-8b9c-1d2e-3f4a5b6c7d8e';
                 var page = document.getElementById('UserRatingsConfigPage');
                 var countInput = page.querySelector('#recentlyRatedCount');
-                var watchStatusInput = page.querySelector('#showWatchStatus');
                 var deleteResult = page.querySelector('#deleteResult');
 
                 page.addEventListener('pageshow', function () {
@@ -63,7 +51,6 @@
                     deleteResult.textContent = '';
                     ApiClient.getPluginConfiguration(pluginId).then(function (config) {
                         countInput.value = config.RecentlyRatedItemsCount || 10;
-                        watchStatusInput.checked = config.ShowWatchStatus !== false;
                     }).finally(Dashboard.hideLoadingMsg);
                 });
 
@@ -73,7 +60,6 @@
                     ApiClient.getPluginConfiguration(pluginId).then(function (config) {
                         var count = parseInt(countInput.value, 10) || 10;
                         config.RecentlyRatedItemsCount = Math.min(50, Math.max(5, count));
-                        config.ShowWatchStatus = watchStatusInput.checked;
                         return ApiClient.updatePluginConfiguration(pluginId, config);
                     }).then(Dashboard.processPluginConfigurationUpdateResult);
                 });

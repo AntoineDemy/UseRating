@@ -3,21 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Security.Claims;
-#if JELLYFIN_10_11_OR_GREATER
-using Jellyfin.Data;
-using Jellyfin.Database.Implementations.Enums;
-#else
-using Jellyfin.Data.Enums;
-#endif
 using Jellyfin.Plugin.UserRatings.Data;
 using Jellyfin.Plugin.UserRatings.Models;
-using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.UserRatings.Api
 {
@@ -39,25 +30,16 @@ namespace Jellyfin.Plugin.UserRatings.Api
 
         private readonly RatingRepository _repository;
         private readonly IUserManager _userManager;
-        private readonly ILibraryManager _libraryManager;
-        private readonly IUserDataManager _userDataManager;
-        private readonly ILogger<RatingsController> _logger;
 
         public RatingsController(
             RatingRepository repository,
-            IUserManager userManager,
-            ILibraryManager libraryManager,
-            IUserDataManager userDataManager,
-            ILogger<RatingsController> logger)
+            IUserManager userManager)
         {
             _repository = repository;
             _userManager = userManager;
-            _libraryManager = libraryManager;
-            _userDataManager = userDataManager;
-            _logger = logger;
         }
 
-        /// <summary>All ratings for an item, the current user's own rating and who has watched it.</summary>
+        /// <summary>All ratings for an item and the current user's own rating.</summary>
         [HttpGet("Items/{itemId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<ItemRatingsDto> GetItemRatings([FromRoute] Guid itemId)
@@ -70,8 +52,7 @@ namespace Jellyfin.Plugin.UserRatings.Api
                 AverageRating = ratings.Count > 0 ? ratings.Average(r => r.Rating) : 0,
                 TotalRatings = ratings.Count,
                 MyRating = ratings.FirstOrDefault(r => r.UserId == userId),
-                Ratings = ratings,
-                Viewers = TryGetViewers(itemId, userId)
+                Ratings = ratings
             };
         }
 
@@ -145,64 +126,6 @@ namespace Jellyfin.Plugin.UserRatings.Api
         {
             _repository.DeleteAllRatings();
             return NoContent();
-        }
-
-        /// <summary>Watch status is a nice-to-have: never let it break the ratings themselves.</summary>
-        private List<ViewerDto>? TryGetViewers(Guid itemId, Guid currentUserId)
-        {
-            try
-            {
-                return GetViewers(itemId, currentUserId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Could not load watch status for item {ItemId}", itemId);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Watch status of every enabled user who can access the item, based on Jellyfin's own played data.
-        /// Null when the feature is turned off or the item isn't something you watch.
-        /// </summary>
-        private List<ViewerDto>? GetViewers(Guid itemId, Guid currentUserId)
-        {
-            if (Plugin.Instance?.Configuration.ShowWatchStatus == false)
-            {
-                return null;
-            }
-
-            var item = _libraryManager.GetItemById(itemId);
-            var currentUser = _userManager.GetUserById(currentUserId);
-            if (item is not (Video or Series or Season) || currentUser is null || !item.IsVisible(currentUser))
-            {
-                return null;
-            }
-
-#if JELLYFIN_12_OR_GREATER
-            var users = _userManager.GetUsers();
-#else
-            var users = _userManager.Users;
-#endif
-            return users
-                .Where(u => !u.HasPermission(PermissionKind.IsDisabled) && item.IsVisible(u))
-                .Select(u =>
-                {
-                    // The DTO variant also aggregates series/seasons (played = all episodes played).
-                    var data = _userDataManager.GetUserDataDto(item, u);
-                    return new ViewerDto
-                    {
-                        UserId = u.Id,
-                        UserName = u.Username,
-                        Played = data?.Played ?? false,
-                        PlayedPercentage = data?.PlayedPercentage,
-                        LastPlayedDate = data?.LastPlayedDate
-                    };
-                })
-                .OrderByDescending(v => v.Played)
-                .ThenByDescending(v => v.PlayedPercentage ?? 0)
-                .ThenBy(v => v.UserName, StringComparer.OrdinalIgnoreCase)
-                .ToList();
         }
 
         private Guid GetCurrentUserId()

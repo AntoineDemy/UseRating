@@ -9,36 +9,36 @@
     "imageUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/icon.png",
     "versions": [
       {
-        "version": "1.1.2.0",
-        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
+        "version": "1.2.0.0",
+        "changelog": "Removed the 'Who watched it' section and its setting. Ratings panel layout adapts to the available width.",
         "targetAbi": "12.0.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-12.0.0.zip",
-        "checksum": "e19e0028d35587a7c5d65ccd8a0ca12b",
-        "timestamp": "2026-11-02T16:37:05Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.2.0.0_jellyfin-12.0.0.zip",
+        "checksum": "d3a6805bcdfbf44a5ddb301f784b7301",
+        "timestamp": "2026-11-02T16:39:01Z"
       },
       {
-        "version": "1.1.2.0",
-        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
+        "version": "1.2.0.0",
+        "changelog": "Removed the 'Who watched it' section and its setting. Ratings panel layout adapts to the available width.",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-10.11.0.zip",
-        "checksum": "2b970bf1add72bd76a0636abd77fd714",
-        "timestamp": "2026-11-02T16:37:05Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.2.0.0_jellyfin-10.11.0.zip",
+        "checksum": "92695b694003bb7824f00df1bc611fe5",
+        "timestamp": "2026-11-02T16:39:01Z"
       },
       {
-        "version": "1.1.2.0",
-        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
+        "version": "1.2.0.0",
+        "changelog": "Removed the 'Who watched it' section and its setting. Ratings panel layout adapts to the available width.",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-10.10.0.zip",
-        "checksum": "fd362a2cfbf994307aaf435ef1a4bece",
-        "timestamp": "2026-11-02T16:37:05Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.2.0.0_jellyfin-10.10.0.zip",
+        "checksum": "6a6ea595f49be333e00a01a233b6fe47",
+        "timestamp": "2026-11-02T16:39:01Z"
       },
       {
-        "version": "1.1.2.0",
-        "changelog": "Fix squashed rating form: panel now sits beside the detail section and its layout adapts to the available width (one column when narrow, two when wide). Frosted cards, compact collapsible 'Not watched' list.",
+        "version": "1.2.0.0",
+        "changelog": "Removed the 'Who watched it' section and its setting. Ratings panel layout adapts to the available width.",
         "targetAbi": "10.9.0.0",
-        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.1.2.0_jellyfin-10.9.0.zip",
-        "checksum": "1c9556e8774389b12b647269c3aaf726",
-        "timestamp": "2026-11-02T16:37:05Z"
+        "sourceUrl": "https://raw.githubusercontent.com/AntoineDemy/UseRating/main/releases/user-ratings_1.2.0.0_jellyfin-10.9.0.zip",
+        "checksum": "576deec9db6c38d268ea0580dfcf9128",
+        "timestamp": "2026-11-02T16:39:01Z"
       }
     ]
   }

@@ -2,7 +2,7 @@
  * User Ratings - jellyfin-web integration.
  *
  * Injected into index.html by the plugin. Adds:
- *  - a ratings panel on item detail pages, with who has watched the item,
+ *  - a ratings panel on item detail pages,
  *  - a "User Ratings" tab on the home screen listing every rated item.
  *
  * Everything is driven by one idempotent sync() that runs on navigation and on
@@ -17,7 +17,6 @@
     window.__userRatingsLoaded = true;
 
     const MAX_NOTE_LENGTH = 2000; // Keep in sync with RatingsController.MaxNoteLength
-    const COMPACT_VIEWERS = 8; // "Not watched" chips shown before the "+N more" button
     const PAGE_SIZE = 24;
     const TAB_CONTENT_ID = 'userRatingsTab';
     const STAR_LABELS = ['', 'Awful', 'Meh', 'Good', 'Great', 'Masterpiece'];
@@ -206,10 +205,6 @@
         layout.appendChild(buildForm(container, itemId, data.MyRating, flash));
         parts.push(layout);
 
-        if (data.Viewers?.length) {
-            parts.push(buildViewers(data.Viewers, data.Ratings));
-        }
-
         if (data.Ratings.length > 0) {
             parts.push(buildReviews(data.Ratings, data.MyRating));
         }
@@ -390,100 +385,6 @@
         wrapper.addEventListener('mouseleave', () => paint(value));
         buttons.forEach((button, i) => button.classList.toggle('ur-filled', i < value));
         return wrapper;
-    }
-
-    function buildViewers(viewers, ratings) {
-        const me = normalizeId(ApiClient.getCurrentUserId());
-        const ratingByUser = new Map(ratings.map((r) => [normalizeId(r.UserId), r.Rating]));
-        const groups = [
-            ['Watched', viewers.filter((v) => v.Played)],
-            ['In progress', viewers.filter((v) => !v.Played && v.PlayedPercentage > 0)],
-            ['Not watched', viewers.filter((v) => !v.Played && !(v.PlayedPercentage > 0))]
-        ];
-        const watched = groups[0][1].length;
-
-        const section = el('div', 'ur-viewers');
-        const title = el('h3', 'ur-subheading', 'Who watched it');
-        title.appendChild(el('span', 'ur-pill', `${watched} / ${viewers.length}`));
-        section.appendChild(title);
-
-        const card = el('div', 'ur-card ur-viewers-card');
-        const track = el('div', 'ur-bar ur-viewers-bar');
-        const fill = el('div', 'ur-bar-fill ur-viewers-fill');
-        fill.style.width = `${(watched / viewers.length) * 100}%`;
-        track.appendChild(fill);
-        card.appendChild(track);
-
-        for (const [label, list] of groups) {
-            if (list.length === 0) {
-                continue;
-            }
-            const group = el('div', 'ur-viewer-group');
-            group.appendChild(el('div', 'ur-viewer-group-title', `${label} · ${list.length}`));
-            const compact = list === groups[2][1];
-            const chips = el('div', compact ? 'ur-viewer-list ur-viewer-list-compact' : 'ur-viewer-list');
-            list.forEach((viewer, i) => {
-                const chip = buildViewer(viewer, normalizeId(viewer.UserId) === me, ratingByUser.get(normalizeId(viewer.UserId)));
-                chip.hidden = compact && i >= COMPACT_VIEWERS;
-                chips.appendChild(chip);
-            });
-            if (compact && list.length > COMPACT_VIEWERS) {
-                const more = el('button', 'ur-viewer-more', `+${list.length - COMPACT_VIEWERS} more`);
-                more.type = 'button';
-                more.addEventListener('click', () => {
-                    chips.querySelectorAll('.ur-viewer[hidden]').forEach((chip) => { chip.hidden = false; });
-                    more.remove();
-                });
-                chips.appendChild(more);
-            }
-            group.appendChild(chips);
-            card.appendChild(group);
-        }
-
-        section.appendChild(card);
-        return section;
-    }
-
-    function buildViewer(viewer, isMe, rating) {
-        const state = viewer.Played ? 'watched' : viewer.PlayedPercentage > 0 ? 'progress' : 'unwatched';
-        const chip = el('div', `ur-viewer ur-viewer-${state}`);
-        chip.appendChild(avatar(viewer.UserName));
-
-        const text = el('div', 'ur-viewer-text');
-        const name = el('div', 'ur-viewer-name');
-        name.appendChild(el('span', 'ur-ellipsis', viewer.UserName));
-        if (isMe) {
-            name.appendChild(el('span', 'ur-tag', 'You'));
-        }
-        text.appendChild(name);
-
-        let detail = '';
-        if (state === 'progress') {
-            detail = `${Math.round(viewer.PlayedPercentage)}%`;
-        } else if (state === 'watched' && viewer.LastPlayedDate) {
-            detail = formatRelative(viewer.LastPlayedDate);
-        }
-        if (detail || rating) {
-            const sub = el('div', 'ur-viewer-sub ur-muted', detail);
-            if (rating) {
-                sub.appendChild(el('span', 'ur-gold', `${detail ? ' · ' : ''}★ ${rating}`));
-            }
-            if (state === 'watched' && viewer.LastPlayedDate) {
-                sub.title = formatDate(viewer.LastPlayedDate);
-            }
-            text.appendChild(sub);
-        }
-        chip.appendChild(text);
-
-        const mark = el('span', 'ur-viewer-mark', state === 'watched' ? '✓' : '');
-        mark.setAttribute('aria-hidden', 'true');
-        if (state === 'progress') {
-            mark.style.setProperty('--ur-progress', `${viewer.PlayedPercentage}%`);
-        }
-        chip.appendChild(mark);
-
-        chip.setAttribute('aria-label', `${viewer.UserName}: ${state === 'watched' ? 'watched' : state === 'progress' ? `${Math.round(viewer.PlayedPercentage)}% watched` : 'not watched'}`);
-        return chip;
     }
 
     function buildReviews(ratings, myRating) {
@@ -974,47 +875,6 @@
             .ur-actions { display: flex; gap: 0.6em; margin-left: auto; }
             .ur-status { font-size: 0.9em; color: var(--ur-muted); margin-top: 0.6em; }
             .ur-status:empty { display: none; }
-
-            .ur-viewers { margin-top: 1.8em; }
-            .ur-viewers-card { display: grid; gap: 1.1em; }
-            .ur-viewers-bar { height: 0.4em; }
-            .ur-viewers-fill { background: #5ccf7f; }
-            .ur-viewer-group-title { font-size: 0.72em; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ur-muted); margin-bottom: 0.55em; }
-            .ur-viewer-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 0.5em; }
-            .ur-viewer {
-                display: flex; align-items: center; gap: 0.6em; min-width: 0;
-                padding: 0.45em 0.7em 0.45em 0.45em; border-radius: 999px;
-                background: var(--ur-surface-2); border: 1px solid var(--ur-border);
-            }
-            .ur-viewer .ur-avatar { width: 2em; height: 2em; font-size: 0.9em; }
-            .ur-viewer-unwatched { background: rgba(255, 255, 255, 0.03); }
-            .ur-viewer-unwatched .ur-avatar { filter: grayscale(1); opacity: 0.45; }
-            .ur-viewer-unwatched .ur-viewer-name { color: var(--ur-muted); font-weight: 500; }
-            .ur-viewer-text { flex: 1; min-width: 0; }
-            .ur-viewer-name { display: flex; align-items: center; gap: 0.4em; font-size: 0.9em; font-weight: 600; min-width: 0; }
-            .ur-viewer-sub { font-size: 0.75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            .ur-viewer-mark {
-                flex: none; width: 1.5em; height: 1.5em; border-radius: 50%;
-                display: grid; place-items: center; font-size: 0.8em; font-weight: 700;
-            }
-            .ur-viewer-watched .ur-viewer-mark { background: #5ccf7f; color: #0d2b16; }
-            .ur-viewer-progress .ur-viewer-mark {
-                background: conic-gradient(var(--ur-accent) var(--ur-progress, 0%), rgba(255, 255, 255, 0.15) 0);
-                -webkit-mask: radial-gradient(circle, transparent 45%, #000 46%); mask: radial-gradient(circle, transparent 45%, #000 46%);
-            }
-            .ur-viewer-unwatched .ur-viewer-mark { border: 1.5px dashed rgba(255, 255, 255, 0.25); }
-            .ur-viewer-list-compact { display: flex; flex-wrap: wrap; gap: 0.4em; }
-            .ur-viewer-list-compact .ur-viewer { padding: 0.25em 0.8em 0.25em 0.25em; gap: 0.45em; }
-            .ur-viewer-list-compact .ur-viewer .ur-avatar { width: 1.6em; height: 1.6em; font-size: 0.75em; }
-            .ur-viewer-list-compact .ur-viewer-name { font-size: 0.82em; }
-            .ur-viewer-list-compact .ur-viewer-sub { font-size: 0.7em; }
-            .ur-viewer-list-compact .ur-viewer-mark { display: none; }
-            .ur-viewer[hidden] { display: none; }
-            .ur-viewer-more {
-                font: inherit; font-size: 0.8em; font-weight: 600; color: var(--ur-accent); cursor: pointer;
-                padding: 0.35em 0.9em; border-radius: 999px; background: transparent; border: 1px dashed rgba(0, 164, 220, 0.5);
-            }
-            .ur-viewer-more:hover { background: rgba(0, 164, 220, 0.12); }
 
             .ur-reviews { margin-top: 1.8em; }
             .ur-subheading { display: flex; align-items: center; gap: 0.5em; font-size: 1.15em; font-weight: 600; margin: 0 0 0.8em; }

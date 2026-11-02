@@ -35,7 +35,6 @@ https://raw.githubusercontent.com/AntoineDemy/UseRating/main/manifest.json
 - 📊 Score summary: the average, the number of ratings, and a breakdown of how many people gave each star count
 - 👥 Every user's review with an avatar, their stars, their note and a relative date ("2 days ago")
 - ✏️ Update or delete your own rating at any time
-- 👀 *Who watched it*: every user with access to the item, grouped as watched / in progress / not watched, with their progress and their rating (uses Jellyfin's played status, so it works for movies, episodes, seasons and whole shows)
 
 **User Ratings home tab**
 - 📈 Server stats: titles rated, total ratings, overall average
@@ -92,7 +91,6 @@ No setup is needed. After the restart, the ratings panel appears on detail pages
 | Setting | Range | Default | Effect |
 |---|---|---|---|
 | Recently rated items count | 5–50 | 10 | Number of items in each *Recently rated* row |
-| Show who has watched each item | on/off | on | Shows the *Who watched it* section on item pages. Turn off if users shouldn't see each other's watch history |
 
 ## API
 
@@ -100,7 +98,7 @@ All endpoints require an authenticated Jellyfin session (`X-Emby-Token`). The ac
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| `GET` | `/UserRatings/Items/{itemId}` | An item's ratings, its average, the caller's own rating and `Viewers` (each user's watch status, `null` when disabled) |
+| `GET` | `/UserRatings/Items/{itemId}` | An item's ratings, its average and the caller's own rating |
 | `POST` | `/UserRatings/Items/{itemId}` | Rate an item. Body: `{ "Rating": 1-5, "Note": "optional, max 2000 chars" }` |
 | `DELETE` | `/UserRatings/Items/{itemId}` | Delete the caller's rating |
 | `GET` | `/UserRatings/Items` | Summary of every rated item, plus the `RecentlyRatedItemsCount` setting |

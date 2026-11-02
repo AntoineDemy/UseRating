@@ -34,23 +34,6 @@ namespace Jellyfin.Plugin.UserRatings.Models
         public RatingDto? MyRating { get; set; }
 
         public IReadOnlyList<RatingDto> Ratings { get; set; } = Array.Empty<RatingDto>();
-
-        /// <summary>Gets or sets every user's watch status, or null when watch status is disabled or not applicable.</summary>
-        public IReadOnlyList<ViewerDto>? Viewers { get; set; }
-    }
-
-    public class ViewerDto
-    {
-        public Guid UserId { get; set; }
-
-        public string UserName { get; set; } = string.Empty;
-
-        public bool Played { get; set; }
-
-        /// <summary>Gets or sets the progress (0-100) when partially watched, or episodes watched for a series/season.</summary>
-        public double? PlayedPercentage { get; set; }
-
-        public DateTime? LastPlayedDate { get; set; }
     }
 
     public class RatedItemsDto

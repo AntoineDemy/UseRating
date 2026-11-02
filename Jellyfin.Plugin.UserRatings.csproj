@@ -10,21 +10,13 @@
     <TargetFramework>net8.0</TargetFramework>
     <TargetFramework Condition="'$(JellyfinMajorMinor)' == '10.11'">net9.0</TargetFramework>
     <TargetFramework Condition="$([System.Version]::Parse('$(JellyfinVersion)').Major) &gt;= 12">net10.0</TargetFramework>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
-    <FileVersion>1.1.2.0</FileVersion>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Authors>Antoine Demy</Authors>
     <Copyright>Copyright (c) 2026 Antoine Demy</Copyright>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(JellyfinMajorMinor)' != '10.9' And '$(JellyfinMajorMinor)' != '10.10'">
-    <DefineConstants>$(DefineConstants);JELLYFIN_10_11_OR_GREATER</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$([System.Version]::Parse('$(JellyfinVersion)').Major) &gt;= 12">
-    <DefineConstants>$(DefineConstants);JELLYFIN_12_OR_GREATER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
